@@ -1,0 +1,18 @@
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    parslet (1.8.3)
+    thor (1.0.0)
+    zeitwerk (2.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  parslet (~> 1.8.2)
+  thor (>=  1.0.0)
+  zeitwerk (~> 2.4)
+
+BUNDLED WITH
+   2.1.4

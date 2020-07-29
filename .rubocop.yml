@@ -1,0 +1,17 @@
+Layout/LineLength:
+  Enable: false
+
+Metrics/ClassLength:
+  Enable: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+Style/MethodCallWithoutArgsParentheses:
+  Enable: false

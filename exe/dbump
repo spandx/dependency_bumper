@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require 'dependency_bumper'
+require 'console'
+
+Signal.trap('INT') do
+  exit(1)
+end
+
+begin
+  DependencyBumper::Cli.start(ARGV)
+rescue StandardError => e
+  Console.logger.error(e.message)
+  exit 1
+end
