@@ -1,28 +1,54 @@
 # DependencyBumper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dependency_bumper`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'dependency_bumper'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install dependency_bumper
+Dependency Bumper is a simple tool helps you to automate updating dependencies of your Ruby project.
 
 ## Usage
 
-TODO: Write usage instructions here
+- Add dependency_bumper to your dependencies
+- Go to your project's directory in terminal and write `dbump bump_gems` . It will update gems with default configuration.
+- `dbump help bump_gems` will give you arguments for the command. This is the only command!
+- You can also integrate dependency bumper to your program by simply calling `Updater.new(config).run`
+
+## Configuration
+
+You can tune behaviour of dependency bumper with configuration, it will run with default configuration if not specified
+
+### Example configuration file
+
+It is in json format,
+
+```json
+{
+    "skip": {
+        "thor": true,
+        "parslet": true
+    },
+    "outdated_level": "strict",
+    "update": {
+        "default": "minor",
+        "major": { "console" : true },
+        "minor": { "active_record": true, "async": true },
+        "patch": { "rails": true }
+    }
+}
+```
+
+`outdated_level` = By default dependency_bumper only lists newer versions allowed by your Gemfile requirements. Other values `("major", "minor", "patch")` .
+
+`update.default` = Default update level. You can easily tune this behaviour specific to gems. In example above, `console` gem will be updated next major version meanwhile `rails` gem will be only patch levels updates will be applied. All other dependencies will get `minor` level updates.
+
+#### Default config
+
+{
+    "skip": { },
+    "outdated_level": "strict",
+    "update": {
+        "default": "minor",
+        "major": { },
+        "minor": { },
+        "patch": { }
+    }
+}
 
 ## Development
 
@@ -30,15 +56,11 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-## Contributing
+## Contributing ٩(◕‿◕｡)۶
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/dependency_bumper. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/dependency_bumper/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/spandx/dependency_bumper. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/dependency_bumper/blob/master/CODE_OF_CONDUCT.md).
 
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the DependencyBumper project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/dependency_bumper/blob/master/CODE_OF_CONDUCT.md).
+The gem is available as open source under the terms of the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
