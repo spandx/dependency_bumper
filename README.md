@@ -15,7 +15,7 @@ You can tune behaviour of dependency bumper with configuration, it will run with
 
 ### Example configuration file
 
-It is in json format,
+By default it will look for a file called `.bumper_config.json"` but you can specify config file as you wish. (Check `dbump help bump_gems`)
 
 ```json
 {
@@ -39,6 +39,7 @@ It is in json format,
 
 #### Default config
 
+```
 {
     "skip": { },
     "outdated_level": "strict",
@@ -49,6 +50,19 @@ It is in json format,
         "patch": { }
     }
 }
+```
+
+### Integration with git
+
+```dbump bump_gemps --git``` command will create another branch (i.e "08-09-2020"), update your dependencies and and commit changes. Commit message body will include details of your update. I.e,
+
+```
+  gem-bump-08-09-2020
+
+  parslet From 1.8.2 To 1.8.3 update level: patch
+  thor From 0.20.3 To 1.0.0 update level: major
+  zeitwerk From 2.3.0 To 2.4.0 update level: patch
+```
 
 ## Development
 

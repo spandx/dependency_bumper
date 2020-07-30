@@ -15,7 +15,7 @@ module DependencyBumper
 
       @report = report_result do
         commands.each do |group, gems|
-          Bundler.settings.temporary(no_install: true) do
+          Bundler.settings.temporary(no_install: false) do
             Bundler::CLI::Update.new(options.merge({ group => true }), gems).run
           end
         end

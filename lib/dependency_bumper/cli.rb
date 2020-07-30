@@ -14,7 +14,7 @@ module DependencyBumper
 
     configuration. You can point out another folder for configuration.
 
-    > $ bump_gemps --git --config myconfig.json
+    > $ dbump bump_gemps --git --config myconfig.json
     LONGDESC
 
     def bump_gems
