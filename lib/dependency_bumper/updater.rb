@@ -36,6 +36,7 @@ module DependencyBumper
       repo_path = exec(['git', 'rev-parse', '--show-toplevel']).first.strip
       git_repo = Git.open(repo_path, log: Console.logger)
 
+      git_config_username_email(git_repo)
       git_repo.checkout(branch_name, new_branch: true)
 
       output = <<~END
@@ -45,6 +46,18 @@ module DependencyBumper
 
       git_repo.add(all: true)
       git_repo.commit(output)
+    end
+
+    def git_config_username_email(repo)
+      if repo.config['user.email'].nil? || repo.config['user.name'].nil?
+        Console.logger.info('Setting up temporary username and email for committing please update git config')
+        Git.configure do |config|
+          config.user.email = 'you@example.com'
+          config.user.name = 'your name'
+        end
+      else
+        Console.logger.info('User name and email is set, read to commit')
+      end
     end
 
     def report_result
