@@ -65,17 +65,12 @@ module DependencyBumper
       end
 
       output = ''
-      # updated = false
       gems.each do |k, v|
         next if v[:from] == v[:to]
 
-        # updated = true
         message = "#{k} From #{v[:from]} To #{v[:to]} update level: #{major_minor_patch(v[:from], v[:to])} \n"
-        output << message
-        # Console.logger.info("Updating #{message}")
+        output += message
       end
-
-      # Console.logger.info("No gem updated") unless updated
 
       output
     end
