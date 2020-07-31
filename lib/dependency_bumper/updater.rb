@@ -51,8 +51,8 @@ module DependencyBumper
     def git_config_username_email(repo)
       if repo.config['user.email'].nil? || repo.config['user.name'].nil?
         Console.logger.info('Setting up temporary username and email for committing please update git config')
-        g.config('user.name', 'Your name')
-        g.config('user.email', 'you@example.com')
+        repo.config('user.name', 'Your name')
+        repo.config('user.email', 'you@example.com')
       else
         Console.logger.info('User name and email is set, read to commit')
       end
