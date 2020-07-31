@@ -64,6 +64,14 @@ By default it will look for a file called `.bumper_config.json"` but you can spe
   zeitwerk From 2.3.0 To 2.4.0 update level: patch
 ```
 
+### Similar projects
+
+- https://github.com/mvz/keep_up
+- https://github.com/attack/lapidarist
+- https://github.com/wemake-services/kira-dependencies
+- https://github.com/singlebrook/bunup
+- https://github.com/dependabot/dependabot-core/tree/main/bundler/lib/dependabot/bundler
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

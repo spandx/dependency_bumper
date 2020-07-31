@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Helpers
   def fixture_file(path)
     Pathname.new(__FILE__).parent.join('fixtures', path)
   end
 
   def default_config
-    { "skip" => {}, "update" => { "default" => "minor", "major" => {}, "minor" => {}, "patch" => {} } }
+    { 'skip' => {}, 'update' => { 'default' => 'minor', 'major' => {}, 'minor' => {}, 'patch' => {} } }
   end
 
   def create_temporary_config_file(content = default_config)

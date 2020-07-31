@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bundler
   class CLI::Outdated
     def run
@@ -33,10 +35,14 @@ module Bundler
         active_spec = retrieve_active_spec(definition, current_spec)
         next unless active_spec
 
-        next unless filter_options_patch.empty? || update_present_via_semver_portions(current_spec, active_spec, options)
+        unless filter_options_patch.empty? || update_present_via_semver_portions(current_spec, active_spec, options)
+          next
+        end
 
         gem_outdated = Gem::Version.new(active_spec.version) > Gem::Version.new(current_spec.version)
-        next unless gem_outdated || (current_spec.git_version != active_spec.git_version)
+        unless gem_outdated || (current_spec.git_version != active_spec.git_version)
+          next
+        end
 
         dependency = current_dependencies[current_spec.name]
 
@@ -56,10 +62,12 @@ module Bundler
 
     def print_gem(current_spec, active_spec, dependency)
       spec_version = "#{active_spec.version}#{active_spec.git_version}"
-      spec_version += " (from #{active_spec.loaded_from})" if Bundler.ui.debug? && active_spec.loaded_from
+      if Bundler.ui.debug? && active_spec.loaded_from
+        spec_version += " (from #{active_spec.loaded_from})"
+      end
       current_version = "#{current_spec.version}#{current_spec.git_version}"
 
-      if dependency && dependency.specific?
+      if dependency&.specific?
         dependency_version = %(, requested #{dependency.requirement})
       end
 

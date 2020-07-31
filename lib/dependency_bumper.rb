@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler'
 require 'bundler/cli'
 require 'bundler/cli/outdated'

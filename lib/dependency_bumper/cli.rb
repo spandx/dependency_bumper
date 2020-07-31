@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module DependencyBumper
   class Cli < Thor
-    package_name "Dependency Bumper"
+    package_name 'Dependency Bumper'
 
     option :config, type: :string
     option :git, type: :boolean
-    desc "bump_gems", "update dependencies of your Ruby project"
+    desc 'bump_gems', 'update dependencies of your Ruby project'
     long_desc <<-LONGDESC
      `bump_gems` will update dependencies of your Ruby project
 
@@ -19,9 +21,9 @@ module DependencyBumper
 
     def bump_gems
       config = if options[:config]
-          load_config(options[:config])
-        else
-          load_config
+                 load_config(options[:config])
+               else
+                 load_config
         end
 
       Updater.new(config).run
@@ -29,14 +31,14 @@ module DependencyBumper
 
     private
 
-    def load_config(config_file = ".bumper_config.json")
+    def load_config(config_file = '.bumper_config.json')
       if Pathname.new(config_file).exist?
         contents = File.new(config_file).read
         JSON.parse(contents)
       else
         Console.logger.info("Couldn\'t find #{config_file} file, falling back to default values")
 
-        { "skip" => {}, "outdated_level" => 'strict', "update" => { "default" => "minor", "major" => {}, "minor" => {}, "patch" => {} } }
+        { 'skip' => {}, 'outdated_level' => 'strict', 'update' => { 'default' => 'minor', 'major' => {}, 'minor' => {}, 'patch' => {} } }
       end
     end
   end

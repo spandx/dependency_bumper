@@ -1,4 +1,6 @@
-require "dependency_bumper/bundler/cli/outdated"
+# frozen_string_literal: true
+
+require 'dependency_bumper/bundler/cli/outdated'
 
 module DependencyBumper
   class Updater
@@ -10,8 +12,8 @@ module DependencyBumper
     end
 
     def run
-      commands = generate_update_arguments(outdated_gems())
-      options = { "jobs" => Etc.nprocessors }
+      commands = generate_update_arguments(outdated_gems)
+      options = { 'jobs' => Etc.nprocessors }
 
       @report = report_result do
         commands.each do |group, gems|
@@ -21,23 +23,23 @@ module DependencyBumper
         end
       end
 
-     if report.empty?
-       Console.logger.info('No gem updated')
-     else
-      Console.logger.info(report)
-      create_git_branch(report) if use_git
-     end
+      if report.empty?
+        Console.logger.info('No gem updated')
+      else
+        Console.logger.info(report)
+        create_git_branch(report) if use_git
+      end
     end
 
     def create_git_branch(report)
-      branch_name = "gem-bump-#{Time.now.strftime("%d-%m-%Y")}"
-      repo_path = exec(["git", "rev-parse", "--show-toplevel"]).first.strip
+      branch_name = "gem-bump-#{Time.now.strftime('%d-%m-%Y')}"
+      repo_path = exec(['git', 'rev-parse', '--show-toplevel']).first.strip
       git_repo = Git.open(repo_path, log: Console.logger)
 
       git_repo.checkout(branch_name, new_branch: true)
 
       output = <<~END
-        Updating gems #{Time.now.strftime("%d-%m-%Y")}
+        Updating gems #{Time.now.strftime('%d-%m-%Y')}
         #{report}
       END
 
@@ -46,7 +48,7 @@ module DependencyBumper
     end
 
     def report_result
-      master_lockfile = Bundler::LockfileParser.new(Bundler.read_file(current_gem_file()))
+      master_lockfile = Bundler::LockfileParser.new(Bundler.read_file(current_gem_file))
 
       gems = {}
 
@@ -56,13 +58,13 @@ module DependencyBumper
 
       yield
 
-      updated_lockfile = Bundler::LockfileParser.new(Bundler.read_file(current_gem_file()))
+      updated_lockfile = Bundler::LockfileParser.new(Bundler.read_file(current_gem_file))
 
       updated_lockfile.specs.each do |spec|
         gems[spec.name][:to] = spec.version if gems[spec.name]
       end
 
-      output = ""
+      output = ''
       # updated = false
       gems.each do |k, v|
         next if v[:from] == v[:to]
@@ -112,7 +114,7 @@ module DependencyBumper
       outdated_gems_list = bundler.run
 
       if outdated_gems_list == []
-        Console.logger.info("No outdated gems found")
+        Console.logger.info('No outdated gems found')
 
         exit 1
       end
@@ -122,11 +124,11 @@ module DependencyBumper
 
     def convert_outdated_level
       {
-        "strict" => "filter-strict",
-        "patch" => "filer-patch",
-        "minor" => "filter-minor",
-        "major" => "filter-major",
-      }.fetch(config["outdated_level"], "filter-strict")
+        'strict' => 'filter-strict',
+        'patch' => 'filer-patch',
+        'minor' => 'filter-minor',
+        'major' => 'filter-major',
+      }.fetch(config['outdated_level'], 'filter-strict')
     end
 
     def exec(cmd)
@@ -153,24 +155,26 @@ module DependencyBumper
 
     def generate_update_arguments(gem_names)
       grouped_gems = {
-        "major" => [],
-        "minor" => [],
-        "patch" => [],
+        'major' => [],
+        'minor' => [],
+        'patch' => [],
       }
 
       gem_names.each do |gem_name|
-        next if config["skip"].key?(gem_name)
+        next if config['skip'].key?(gem_name)
 
         placed_in_group = false
 
         grouped_gems.keys.each do |group_name|
-          if config["update"][group_name].key?(gem_name)
+          if config['update'][group_name].key?(gem_name)
             grouped_gems[group_name] << gem_name
             placed_in_group = true
           end
         end
 
-        grouped_gems[config["update"]["default"]] << gem_name unless placed_in_group
+        unless placed_in_group
+          grouped_gems[config['update']['default']] << gem_name
+        end
       end
 
       grouped_gems.reject! { |_, v| v.empty? }
