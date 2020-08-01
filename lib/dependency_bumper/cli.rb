@@ -2,6 +2,22 @@
 
 module DependencyBumper
   class Cli < Thor
+    DEFAULT_CONFIGURATION = {
+      'skip' => {},
+      'outdated_level' => 'strict',
+      'update' => {
+        'default' => 'minor',
+        'major' => {},
+        'minor' => {},
+        'patch' => {}
+      },
+      'git' => {
+        'commit' => {
+          'gpgsign' => false
+        }
+      }
+    }.freeze
+
     package_name 'Dependency Bumper'
 
     option :config, type: :string
@@ -20,26 +36,17 @@ module DependencyBumper
     LONGDESC
 
     def bump_gems
-      config = if options[:config]
-                 load_config(options[:config])
-               else
-                 load_config
-        end
-
-      Updater.new(config).run
+      path = options.fetch(:config, '.bumper_config.json')
+      Updater.new(load_config(Pathname.new(path))).run
     end
 
     private
 
-    def load_config(config_file = '.bumper_config.json')
-      if Pathname.new(config_file).exist?
-        contents = File.new(config_file).read
-        JSON.parse(contents)
-      else
-        Console.logger.info("Couldn\'t find #{config_file} file, falling back to default values")
+    def load_config(config_file)
+      return JSON.parse(config_file.read) if config_file.exist?
 
-        { 'skip' => {}, 'outdated_level' => 'strict', 'update' => { 'default' => 'minor', 'major' => {}, 'minor' => {}, 'patch' => {} } }
-      end
+      Console.logger.info("Couldn\'t find #{config_file} file, falling back to default values")
+      DEFAULT_CONFIGURATION
     end
   end
 end

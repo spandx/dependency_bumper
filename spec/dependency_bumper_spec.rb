@@ -2,7 +2,7 @@
 
 RSpec.describe DependencyBumper do
   let(:default_config) do
-    { 'skip' => {}, 'outdated_level' => 'strict', 'update' => { 'default' => 'minor', 'major' => {}, 'minor' => {}, 'patch' => {} } }
+    DependencyBumper::Cli::DEFAULT_CONFIGURATION.dup
   end
 
   let(:number_of_cores) { Etc.nprocessors }
@@ -93,8 +93,7 @@ RSpec.describe DependencyBumper do
       Dir.mktmpdir do |dir|
         g = Git.init(dir)
 
-        file = File.new("#{dir}/temp", 'w')
-        file.write('hello world')
+        IO.write("#{dir}/temp", 'hello world')
 
         dp = DependencyBumper::Updater.new(default_config, true)
         allow(dp).to receive(:report_result).and_return(updated_gems)

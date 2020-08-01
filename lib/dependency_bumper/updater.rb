@@ -46,6 +46,8 @@ module DependencyBumper
 
       git_repo.add(all: true)
       git_repo.commit(output)
+    rescue Git::GitExecuteError => error
+      Console.logger.error(error)
     end
 
     def git_config_username_email(repo)
@@ -56,6 +58,7 @@ module DependencyBumper
       else
         Console.logger.info('User name and email is set, read to commit')
       end
+      repo.config('commit.gpgsign', config.dig('git', 'commit', 'gpgsign').to_s)
     end
 
     def report_result
