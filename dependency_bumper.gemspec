@@ -5,8 +5,8 @@ require_relative 'lib/dependency_bumper/version'
 Gem::Specification.new do |spec|
   spec.name          = 'dependency_bumper'
   spec.version       = DependencyBumper::VERSION
-  spec.authors       = ['can eldem']
-  spec.email         = ['eldemcan@gmail.com']
+  spec.authors       = ['Can Eldem', 'Mo Khan']
+  spec.email         = ['eldemcan@gmail.com', 'mo@mokhan.ca']
 
   spec.summary       = ' Tool helps you to automate updating dependencies of your Ruby project. '
   spec.homepage      = 'https://github.com/spandx/dependency_bumper'

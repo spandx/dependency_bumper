@@ -39,18 +39,7 @@ By default it will look for a file called `.bumper_config.json"` but you can spe
 
 #### Default config
 
-```
-{
-    "skip": { },
-    "outdated_level": "strict",
-    "update": {
-        "default": "minor",
-        "major": { },
-        "minor": { },
-        "patch": { }
-    }
-}
-```
+Default configuration values can be found [in cli.rb](https://github.com/spandx/dependency_bumper/blob/master/lib/dependency_bumper/cli.rb#L5)
 
 ### Integration with git
 

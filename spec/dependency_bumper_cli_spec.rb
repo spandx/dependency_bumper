@@ -14,9 +14,9 @@ RSpec.describe DependencyBumper::Cli do
     config_file_with_defaults = create_temporary_config_file(temp_config)
     arguments = ['bump_gems', '--config', config_file_with_defaults.path]
 
-    allow(DependencyBumper::Updater).to receive(:new).with(temp_config).and_return(double(run: true))
+    allow(DependencyBumper::Updater).to receive(:new).with(temp_config, {}).and_return(double(run: true))
     DependencyBumper::Cli.start(arguments)
-    expect(DependencyBumper::Updater).to have_received(:new).with(temp_config)
+    expect(DependencyBumper::Updater).to have_received(:new).with(temp_config, {})
   end
 
   it 'updates dependencies for given Gemfile' do

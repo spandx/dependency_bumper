@@ -22,22 +22,29 @@ module DependencyBumper
 
     option :config, type: :string
     option :git, type: :boolean
+    option :dry, type: :boolean
     desc 'bump_gems', 'update dependencies of your Ruby project'
     long_desc <<-LONGDESC
      `bump_gems` will update dependencies of your Ruby project
 
     If you give --git option it will create a branch and commit message will include information about updated gems.
 
+    --dry option will change Gemfile.lock but won't install gems.
+
     This gem looks for a config file called bumper_config.json by default and if it doesn't find it, it will use default
 
     configuration. You can point out another folder for configuration.
 
-    > $ dbump bump_gemps --git --config myconfig.json
+    Examples \n
+    > $ dbump bump_gems --git --config myconfig.json \n
+    > $ dbump bump_gems --dry \n
+    > $ dbump bump_gems \n
+
     LONGDESC
 
     def bump_gems
       path = options.fetch(:config, '.bumper_config.json')
-      Updater.new(load_config(Pathname.new(path))).run
+      Updater.new(load_config(Pathname.new(path)), options.slice(:dry, :git)).run
     end
 
     private
