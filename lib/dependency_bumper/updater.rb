@@ -6,7 +6,7 @@ module DependencyBumper
   class Updater
     attr_reader :config, :cmd_ln_opt, :report
 
-    def initialize(config = {}, cmd_ln_opt)
+    def initialize(config, cmd_ln_opt)
       @config = config
       @cmd_ln_opt = cmd_ln_opt
     end
