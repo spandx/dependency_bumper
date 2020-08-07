@@ -46,8 +46,8 @@ module DependencyBumper
 
       git_repo.add(all: true)
       git_repo.commit(output)
-    rescue Git::GitExecuteError => error
-      Console.logger.error(error)
+    rescue Git::GitExecuteError => e
+      Console.logger.error(e)
     end
 
     def git_config_username_email(repo)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DependencyBumper::Updater do
-  describe 'dsad' do
   let(:default_config) do
     DependencyBumper::Cli::DEFAULT_CONFIGURATION.dup
   end
@@ -107,5 +106,4 @@ RSpec.describe DependencyBumper::Updater do
       end
     end
   end
-end
 end
