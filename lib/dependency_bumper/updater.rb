@@ -12,7 +12,10 @@ module DependencyBumper
     end
 
     def run
-      commands = generate_update_arguments(outdated_gems)
+      gem_list = outdated_gems
+      return if gem_list == []
+
+      commands = generate_update_arguments(gem_list)
       options = { 'jobs' => Etc.nprocessors }
 
       @report = report_result do
@@ -124,8 +127,7 @@ module DependencyBumper
 
       if outdated_gems_list == []
         Console.logger.info('No outdated gems found')
-
-        exit 1
+        return []
       end
 
       outdated_gems_list.map { |gem| gem[:current_spec].name }
