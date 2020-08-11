@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DependencyBumper do
+RSpec.describe DependencyBumper::Updater do
   let(:default_config) do
     DependencyBumper::Cli::DEFAULT_CONFIGURATION.dup
   end
@@ -32,8 +32,7 @@ RSpec.describe DependencyBumper do
 
   it 'runs with default configuration' do
     allow(Bundler::CLI::Update).to receive(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'console', 'async']).and_return(double(run: true))
-
-    DependencyBumper::Updater.new(default_config).run
+    DependencyBumper::Updater.new(default_config, {}).run
     expect(Bundler::CLI::Update).to have_received(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'console', 'async'])
   end
 
@@ -41,7 +40,7 @@ RSpec.describe DependencyBumper do
     output = "parslet From 1.8.2 To 1.8.3 update level: patch \nthor From 0.20.3 To 1.0.0 update level: major \nzeitwerk From 2.3.0 To 2.4.0 update level: patch \n"
 
     allow(Bundler::CLI::Update).to receive(:new).with(any_args).and_return(double(run: true))
-    instance = DependencyBumper::Updater.new(default_config)
+    instance = DependencyBumper::Updater.new(default_config, {})
     allow(instance).to receive(:current_gem_file).and_return(fixture_file('before_update.lock'), fixture_file('after_update.lock'))
 
     instance.run
@@ -53,7 +52,7 @@ RSpec.describe DependencyBumper do
     default_config['skip'] = { 'console' => '' }
     allow(Bundler::CLI::Update).to receive(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'async']).and_return(double(run: true))
 
-    DependencyBumper::Updater.new(default_config).run
+    DependencyBumper::Updater.new(default_config, {}).run
 
     expect(Bundler::CLI::Update).to have_received(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'async'])
   end
@@ -63,7 +62,7 @@ RSpec.describe DependencyBumper do
     allow(Bundler::CLI::Update).to receive(:new).with({ 'jobs' => number_of_cores, 'major' => true }, ['console']).and_return(double(run: true))
     allow(Bundler::CLI::Update).to receive(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'async']).and_return(double(run: true))
 
-    DependencyBumper::Updater.new(default_config).run
+    DependencyBumper::Updater.new(default_config, {}).run
     expect(Bundler::CLI::Update).to have_received(:new).with({ 'jobs' => number_of_cores, 'minor' => true }, ['zeitwerk', 'async'])
     expect(Bundler::CLI::Update).to have_received(:new).with({ 'jobs' => number_of_cores, 'major' => true }, ['console'])
   end
@@ -95,7 +94,7 @@ RSpec.describe DependencyBumper do
 
         IO.write("#{dir}/temp", 'hello world')
 
-        dp = DependencyBumper::Updater.new(default_config, true)
+        dp = DependencyBumper::Updater.new(default_config, { git: true })
         allow(dp).to receive(:report_result).and_return(updated_gems)
 
         allow(Open3).to receive(:popen3).with('git', 'rev-parse', '--show-toplevel').and_yield(nil, Helpers::IOMock.new([dir]), [], wait_thr)

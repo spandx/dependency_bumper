@@ -4,20 +4,23 @@ require 'dependency_bumper/bundler/cli/outdated'
 
 module DependencyBumper
   class Updater
-    attr_reader :config, :use_git, :report
+    attr_reader :config, :cmd_ln_opt, :report
 
-    def initialize(config = {}, use_git = false)
+    def initialize(config, cmd_ln_opt)
       @config = config
-      @use_git = use_git
+      @cmd_ln_opt = cmd_ln_opt
     end
 
     def run
-      commands = generate_update_arguments(outdated_gems)
+      gem_list = outdated_gems
+      return if gem_list == []
+
+      commands = generate_update_arguments(gem_list)
       options = { 'jobs' => Etc.nprocessors }
 
       @report = report_result do
         commands.each do |group, gems|
-          Bundler.settings.temporary(no_install: false) do
+          Bundler.settings.temporary(no_install: cmd_ln_opt.fetch(:dry, false)) do
             Bundler::CLI::Update.new(options.merge({ group => true }), gems).run
           end
         end
@@ -27,7 +30,7 @@ module DependencyBumper
         Console.logger.info('No gem updated')
       else
         Console.logger.info(report)
-        create_git_branch(report) if use_git
+        create_git_branch(report) if cmd_ln_opt.fetch(:git, false)
       end
     end
 
@@ -46,8 +49,8 @@ module DependencyBumper
 
       git_repo.add(all: true)
       git_repo.commit(output)
-    rescue Git::GitExecuteError => error
-      Console.logger.error(error)
+    rescue Git::GitExecuteError => e
+      Console.logger.error(e)
     end
 
     def git_config_username_email(repo)
@@ -124,8 +127,7 @@ module DependencyBumper
 
       if outdated_gems_list == []
         Console.logger.info('No outdated gems found')
-
-        exit 1
+        return []
       end
 
       outdated_gems_list.map { |gem| gem[:current_spec].name }
