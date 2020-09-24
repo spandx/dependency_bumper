@@ -1,12 +1,8 @@
 name: Ruby Gem
 
 on:
-  push:
-    branches:    
-      # Push events to branches matching refs/heads/releases/10
-      - 'releases/**'
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [published]
 
 jobs:
   build:
